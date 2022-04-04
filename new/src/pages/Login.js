@@ -1,8 +1,12 @@
 import React from "react";
 import { Text, Input, Grid, Button } from "../elements";
-import { setCookie } from "../shared/Cookie";
+// import { setCookie } from "../shared/Cookie";
+import {actionCreators as userActions} from "../redux/modules/user";
+import { useDispatch } from "react-redux";
 
 const Login = (props) => {
+
+  const dispatch = useDispatch();
 
   const [id, setId] = React.useState('');
     const [pwd, setPwd] = React.useState('');
@@ -16,10 +20,7 @@ const Login = (props) => {
     }
 
     const login = () => {
-      console.log(id)
-      console.log(pwd)
-        setCookie("user_id", id, 3);
-        setCookie("user_pwd", pwd, 3);
+      dispatch(userActions.logIn({user_name: "perl"}));
     }
 
   
@@ -49,10 +50,7 @@ const Login = (props) => {
 
         <Button
           text="로그인하기"
-          _onClick={() => {
-            console.log("로그인 했어!");
-            login();
-          }}
+          _onClick={login}
         ></Button>
       </Grid>
     </React.Fragment>

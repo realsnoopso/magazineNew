@@ -13,7 +13,6 @@ import Header from "../components/Header";
 import {Grid} from "../elements";
 
 function App() {
-
   return (
     <React.Fragment>
       <Grid>

@@ -14,10 +14,18 @@ const logIn = createAction(LOG_IN, (user) => ({user}));
 const logOut = createAction(LOG_OUT, (user) => ({user}));
 const getUser = createAction(GET_USER, (user) => ({user}));
 
-//initialState
+// initialState
 const initialState = {
   user: null,
   is_login: false,
+}
+
+// middleware actions
+const loginAction = (user) => {
+  return function (dispatch, getState, {history}) {
+    console.log(logIn(user));
+    history.push('/');
+  }
 }
 
 export default handleActions({
