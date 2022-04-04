@@ -2,23 +2,13 @@ import React from "react";
 import {Grid, Text, Button} from "../elements";
 import {getCookie, deleteCookie} from "../shared/Cookie";
 
+import { useSelector, useDispatch } from "react-redux";
+import { actionCreators as userActions } from "../redux/modules/user";
+
+
 const Header = (props) => {
-    const [is_login, setIsLogin] = React.useState(false);
-
-    React.useEffect(() => {
-
-        // 쿠키를 가져와요!
-        let cookie = getCookie('user_id');
-        // 확인해봅시다!
-        console.log(cookie);
-        // 쿠키가 있으면?
-        if(cookie){
-            setIsLogin(true);
-        }else{
-            setIsLogin(false);
-        }
-    }, []);
-
+  const dispatch = useDispatch();
+  const is_login = useSelector((state) => state.user.is_login);
     if(is_login){
         return (
           <React.Fragment>
@@ -32,7 +22,11 @@ const Header = (props) => {
               <Grid is_flex>
                 <Button text="내정보"></Button>
                 <Button text="알림"></Button>
-                <Button text="로그아웃" _onClick={deleteCookie('user_id')}></Button>
+                <Button text="로그아웃" _onClick={() => {
+                    dispatch(userActions.logOut({}));
+                  }}> 
+                </Button>
+
               </Grid>
             </Grid>
           </React.Fragment>

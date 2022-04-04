@@ -2,7 +2,7 @@ import {createAction, handleActions} from "redux-actions";
 import {produce} from "immer";
 // proxy와 연관, immer는 A라는 것을 받아다가 A 다시를 만들어버림. 불변성 신경 안써도 되는 것.
 
-import {setCookie} from "../../shared/Cookie"
+import {deleteCookie, setCookie} from "../../shared/Cookie"
 
 // action
 const LOG_IN ="LOG_IN";
@@ -24,20 +24,28 @@ const initialState = {
 const loginAction = (user) => {
   return function (dispatch, getState, {history}) {
     console.log(logIn(user));
+    dispatch(logIn(user));
     history.push('/');
   }
 }
 
-export default handleActions({
-  [LOG_IN]: (state, action) => produce(state, (draft)=>{
-    setCookie("is_login", "success");
-    draft.user = action.payload.user;
-    draft.is_login = action.payload.user;
-  }),
-  [LOG_OUT]: (state, action) => produce(state, (draft)=>{}),
-  [GET_USER]: (state, action) => produce(state, (draft)=>{}),
-  }, 
-initialState
+export default handleActions(
+  {
+    [LOG_IN]: (state, action) =>
+      produce(state, (draft) => {
+        setCookie("is_login", "success");
+        draft.user = action.payload.user;
+				draft.is_login = true;
+      }),
+		[LOG_OUT]: (state, action) =>
+      produce(state, (draft) => {
+        deleteCookie("is_login");
+        draft.user = null;
+				draft.is_login = false; 
+      }),
+    [GET_USER]: (state, action) => produce(state, (draft) => {}),
+  },
+  initialState
 );
 
 
@@ -45,6 +53,7 @@ const actionCreators = {
   logIn,
   getUser,
   logOut,
+  loginAction,
 };
 
 export { actionCreators };

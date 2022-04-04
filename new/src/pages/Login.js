@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, Input, Grid, Button } from "../elements";
 // import { setCookie } from "../shared/Cookie";
-import {actionCreators as userActions} from "../redux/modules/user";
+import { actionCreators as userActions } from "../redux/modules/user";
 import { useDispatch } from "react-redux";
 
 const Login = (props) => {
@@ -20,7 +20,7 @@ const Login = (props) => {
     }
 
     const login = () => {
-      dispatch(userActions.logIn({user_name: "perl"}));
+      dispatch(userActions.loginAction({user_name: "perl"}));
     }
 
   
