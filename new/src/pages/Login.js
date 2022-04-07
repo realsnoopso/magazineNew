@@ -9,7 +9,7 @@ const Login = (props) => {
   const dispatch = useDispatch();
 
   const [id, setId] = React.useState('');
-    const [pwd, setPwd] = React.useState('');
+  const [pwd, setPwd] = React.useState('');
 
     const changeId = (e) => {
         setId(e.target.value);
@@ -20,7 +20,13 @@ const Login = (props) => {
     }
 
     const login = () => {
-      dispatch(userActions.loginAction({user_name: "perl"}));
+
+      if (id === "" || pwd === "") {
+        window.alert("아이디 혹은 비밀번호가 공란입니다. 입력해주세요.");
+        return;
+      }
+      dispatch(userActions.loginFB(id, pwd));
+      
     }
 
   
@@ -35,7 +41,9 @@ const Login = (props) => {
           <Input
             label="아이디"
             placeholder="아이디를 입력해주세요."
-            _onChange={changeId}
+            _onChange={(e) => {
+              setId(e.target.value);
+            }}
           />
         </Grid>
 
@@ -43,7 +51,9 @@ const Login = (props) => {
           <Input
             label="패스워드"
             placeholder="패스워드 입력해주세요."
-            _onChange={changePwd}
+            _onChange={(e) => {
+              setPwd(e.target.value);
+            }}
             type="password"
           />
         </Grid>
