@@ -8,6 +8,8 @@
     "@testing-library/user-event": "^12.1.10",
     "connected-react-router": "^6.9.2",
     "firebase": "8",
+    "firebase-tools": "^10.6.0",
+    "global": "^4.4.0",
     "history": "4.10.1",
     "immer": "^9.0.12",
     "react": "^17.0.1",

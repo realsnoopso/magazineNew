@@ -5,10 +5,17 @@ import React from "react";
 
 import {Grid, Image, Text, Button} from "../elements";
 import { history } from "../redux/configureStore";
-
+import {actionCreators as postActions} from "../redux/modules/post";
+import {useSelector, useDispatch} from "react-redux";
 
 
 const Post = (props) => {
+  const dispatch = useDispatch();
+
+  const deletePost = () => {
+    // dispatch(postActions.deletePostFB("id"));
+    console.log('델리트')
+  }
 
     return (
       <React.Fragment>
@@ -22,7 +29,7 @@ const Post = (props) => {
               {props.is_me && (
                 <React.Fragment>
                   <Button width="auto" padding="4px" margin="4px" _onClick={() => {history.push(`/write/${props.id}`)}}>수정</Button>
-                  <Button width="auto" padding="4px" margin="4px" _onClick={() => {history.push(`/delete/${props.id}`)}}>삭제</Button>
+                  <Button width="auto" padding="4px" margin="4px" _onClick={deletePost}>삭제</Button>
                 </React.Fragment>
               )}
               <Text>{props.insert_dt}</Text>
