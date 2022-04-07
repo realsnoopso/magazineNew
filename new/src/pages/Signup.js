@@ -23,7 +23,7 @@ const Signup = (props) => {
     }
 
     dispatch(userActions.signupFB(id, pwd, user_name));
-    console.log('회원가입 완료')
+    // console.log('회원가입 완료')
   }
 
   return (

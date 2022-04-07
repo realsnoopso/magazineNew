@@ -37,7 +37,7 @@ const loginFB = (id, pwd) => {
       auth
         .signInWithEmailAndPassword(id, pwd)
         .then((user) => {
-          console.log(user);
+          // console.log(user);
           dispatch(
             setUser({
               user_name: user.user.displayName,
@@ -53,7 +53,7 @@ const loginFB = (id, pwd) => {
           var errorCode = error.code;
           var errorMessage = error.message;
 
-          console.log(errorCode, errorMessage);
+          // console.log(errorCode, errorMessage);
         });
     });
   };
@@ -66,7 +66,7 @@ const signupFB = (id, pwd, user_name) => {
     auth
     .createUserWithEmailAndPassword(id, pwd)
     .then((user) => {
-      console.log(user);
+      // console.log(user);
 
       auth.currentUser.updateProfile({
         displayName: user_name,
@@ -79,7 +79,7 @@ const signupFB = (id, pwd, user_name) => {
         }));
         history.push('/');
       }).catch((error) => {
-        console.log(error);
+        // console.log(error);
       })
 
       // Signed in
@@ -89,7 +89,7 @@ const signupFB = (id, pwd, user_name) => {
       var errorCode = error.code;
       var errorMessage = error.message;
 
-      console.log(errorCode, errorMessage);
+      // console.log(errorCode, errorMessage);
       // ..
     });
   }
@@ -107,10 +107,10 @@ const loginCheckFB = () => {
           uid: user.uid,
           })
         );
-        console.log('loginCheckFB-in')
+        // console.log('loginCheckFB-in')
       } else {
         dispatch(logOut());
-        console.log('loginCheckFB-out')
+        // console.log('loginCheckFB-out')
       }
     })
   }
@@ -133,7 +133,7 @@ export default handleActions(
         setCookie("is_login", "success");
         draft.user = action.payload.user;
 				draft.is_login = true;
-        console.log('hi')
+        // console.log('hi')
       }),
 		[LOG_OUT]: (state, action) =>
       produce(state, (draft) => {
