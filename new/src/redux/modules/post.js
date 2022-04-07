@@ -1,7 +1,9 @@
 import { createAction, handleActions } from "redux-actions";
 import { produce } from "immer";
-import { firestore } from "../../shared/firebase";
+import { firestore, storage } from "../../shared/firebase";
+import moment from "moment";
 
+import { actionCreators as imageActions } from "./image";
 
 //action
 const SET_POST = "SET_POST";
@@ -16,16 +18,63 @@ const initialState = {
 
 // 게시글 하나에는 어떤 정보가 있어야 하는 지 하나 만들어둡시다! :)
 const initialPost = {
-user_info: {
-  id: 0,
-  user_name: "mean0",
-  user_profile: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg",
-},
-image_url: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg",
-contents: "고양이네요!",
-comment_cnt: 10,
-insert_dt: "2021-02-27 10:00:00",
+//   id: 0,
+// user_info: {
+
+//   user_name: "mean0",
+//   user_profile: "https://dimg.donga.com/ugc/CDB/WEEKLY/Article/5b/b3/22/85/5bb32285000ed2738de6.jpg",
+// },
+  image_url: "",
+  contents: "",
+  comment_cnt: 0,
+  insert_dt: moment().format("YYYY-MM-DD hh:mm:ss")
+
 };
+
+const addPostFB = (contents="",) => {
+  return function (dispatch, getState, {history}) {
+    const postDB = firestore.collection("post");
+    const _user = getState().user.user;
+    const user_info = {
+      user_name: _user.user_name,
+      user_id: _user.uid,
+      user_profile: _user.user_profile
+    }
+    const _post = {
+      ...initialPost,
+      contents: contents,
+      insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
+    }
+
+    const _image = getState().image.preview;
+
+    console.log(_image);
+    const _upload = storage.ref(`images/${user_info.user_id}_${new Date().getTime()}`).putString(_image, "data_url");
+    
+    _upload.then(snapshot => {
+      snapshot.ref.getDownloadURL().then(url => {
+        console.log(url);
+        return url;
+      }).then(url => {
+        postDB.add({...user_info, ..._post, image_url: url}).then((doc)=> {
+          let post = {user_info, ..._post, id: doc.id, image_url: url};
+          dispatch(addPost(post));
+          history.replace("/");
+
+          dispatch(imageActions.setPreview(null))
+        }).catch((err) => {
+          window.alert("앗! 포스트 작성에 문제가 있어요!");
+          console.log("post 작성 실패!", err);
+        });
+      });
+    })
+    .catch((err)=> {
+      window.alert("앗! 이미지 업로드에 문제가 있어요!");
+      console.log(err);
+    });
+
+  }
+}
 
 
 const getPostFB = () => {
@@ -84,8 +133,9 @@ export default handleActions(
       }),
 
       [ADD_POST]: (state, action) => produce(state, (draft) => {
-          
-      })
+        // unshift는 배열 맨 앞에 데이터를 넣어줘요!
+         draft.list.unshift(action.payload.post);
+    }),
   },
   initialState
 );
@@ -95,6 +145,7 @@ const actionCreators = {
   setPost,
   addPost,
   getPostFB,
+  addPostFB
 };
 
 export { actionCreators };
